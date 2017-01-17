@@ -36,7 +36,7 @@ public class CompletionLoader {
             bufferedReader.lines()
                     .forEach(line -> {
                         if(line.substring(0,1).contains("\"")){
-                            Index index = new Index.Builder( "{\"firstname\":\"" + line.substring(1,line.length()-1)  + "\"}").index("actors").type("csv").build();
+                            Index index = new Index.Builder("{\"firstname\":\""+line.substring(1,line.length()-1)+"\"}").index("actors").type("csv").build();
                             try {
                                 client.execute(index);
                             //    System.out.println(line);
