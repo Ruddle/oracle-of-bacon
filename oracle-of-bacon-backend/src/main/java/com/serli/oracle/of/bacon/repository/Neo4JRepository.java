@@ -22,7 +22,7 @@ public class Neo4JRepository {
         Session session = driver.session();
 
         String query = "MATCH p=shortestPath(\n" +
-                "  (bacon:Actor {name:\"Hanks, Tom\"})-[*]-(act:Actor {name:\"" + actorName + "\"})\n" +
+                "  (bacon:Actor {name:\"Bacon, Kevin (I)\"})-[*]-(act:Actor {name:\"" + actorName + "\"})\n" +
                 ")\n" +
                 "RETURN p";
 
