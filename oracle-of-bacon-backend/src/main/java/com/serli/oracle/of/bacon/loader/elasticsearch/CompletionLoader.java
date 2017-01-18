@@ -31,10 +31,14 @@ public class CompletionLoader {
         String inputFilePath = args[0];
         JestClient client = ElasticSearchRepository.createClient();
         client.execute(new CreateIndex.Builder("actors").build());
+
         PutMapping putMapping = new PutMapping.Builder(
                 "actors",
                 "csv",
-                "{ \"csv\" : { \"properties\" : { \"firstname\" : {\"type\" : \"completion\", \"store\" : \"yes\"} } } }"
+                "{ \"csv\" : { \"properties\" : {" +
+                        " \"firstname\" : {\"type\" : \"string\"}   ," +
+                        " \"suggestname\" : {\"type\" : \"completion\"}   }" +
+                        " } }"
         ).build();
         client.execute(putMapping);
 
@@ -44,9 +48,19 @@ public class CompletionLoader {
             Bulk.Builder bulkBuilder = new Bulk.Builder();
             System.out.println("Sending by bulk");
             for (int i = 0; i < list.size(); i++) {
+                String line = list.get(i).substring(1, list.get(i).length() - 1);
+                String[] arr = (line.split(",| "));
+                String suggest = "[" + "\"" + line + "\"";
+                for (String val : arr) {
+                    if (val.length() > 3)
+                        suggest += "," + "\"" + val + "\"";
+                }
+                suggest += "]";
+
                 bulkBuilder = bulkBuilder.addAction(
                         new Index.Builder(
-                                "{\"firstname\":\"" + list.get(i).substring(1, list.get(i).length() - 1) + "\"}"
+                                "{\"firstname\":\"" + line + "\"," +
+                                        " \"suggestname\":" + suggest + "}"
                         ).build()
                 );
                 if (i % bulksize == bulksize - 1) {
