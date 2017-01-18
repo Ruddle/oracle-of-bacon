@@ -1,7 +1,6 @@
 package com.serli.oracle.of.bacon.repository;
 
 
-import com.sun.javafx.geom.Edge;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Path;
@@ -20,52 +19,38 @@ public class Neo4JRepository {
 
     public String getConnectionsToKevinBacon(String actorName) {
         Session session = driver.session();
-
         String query = "MATCH p=shortestPath(\n" +
                 "  (bacon:Actor {name:\"Bacon, Kevin (I)\"})-[*]-(act:Actor {name:\"" + actorName + "\"})\n" +
                 ")\n" +
                 "RETURN p";
-
-        ArrayList<GraphNode> listNode = new ArrayList<GraphNode>();
-        ArrayList<GraphEdge> listEdge = new ArrayList<GraphEdge>();
-
+        List<GraphNode> listNode = new ArrayList<GraphNode>();
+        List<GraphEdge> listEdge = new ArrayList<GraphEdge>();
         StatementResult result = session.run(query);
         while (result.hasNext()) {
             Record record = result.next();
-
             Path p = record.get("p").asPath();
-
             for (Node n : p.nodes()) {
                 String label = "Movie";
-                for(String s : n.labels()) {
+                for (String s : n.labels()) {
                     if (s.equals("Actor"))
                         label = s;
                 }
-                listNode.add(new GraphNode(n.id(), (label.equals("Actor")? n.get("name") :n.get("title")).asString() , label ));
+                listNode.add(new GraphNode(n.id(), (label.equals("Actor") ? n.get("name") : n.get("title")).asString(), label));
             }
-
             for (Relationship r : p.relationships()) {
                 listEdge.add(new GraphEdge(r.id(), r.startNodeId(), r.endNodeId(), "played_in"));
             }
-
-
         }
         session.close();
-
-
-
         String res = "[";
-
         for (GraphNode n : listNode) {
-            res+=  n + ",";
+            res += n + ",";
         }
-
         for (GraphEdge n : listEdge) {
-            res+= n + ",";
+            res += n + ",";
         }
-        res =res.substring(0, res.length()-1);
-        res+= "]";
-        System.out.println(res);
+        res = res.substring(0, res.length() - 1);
+        res += "]";
         return res;
     }
 
@@ -106,7 +91,7 @@ public class Neo4JRepository {
             return "{\n" +
                     "\"data\": {\n" +
                     "\"id\": " + id + ",\n" +
-                    "\"type\": \""+type+"\",\n" +
+                    "\"type\": \"" + type + "\",\n" +
                     "\"value\": \"" + value + "\"\n" +
                     "}\n" +
                     "}";
@@ -128,9 +113,9 @@ public class Neo4JRepository {
         public String toString() {
             return "{\n" +
                     "\"data\": {\n" +
-                    "\"id\": "+id+",\n" +
-                    "\"source\": "+source+",\n" +
-                    "\"target\": "+target+",\n" +
+                    "\"id\": " + id + ",\n" +
+                    "\"source\": " + source + ",\n" +
+                    "\"target\": " + target + ",\n" +
                     "\"value\": \"PLAYED_IN\"\n" +
                     "}\n" +
                     "}";

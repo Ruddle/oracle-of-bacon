@@ -45,16 +45,6 @@ public class CompletionLoader {
             System.out.println("Sending by bulk");
             for (int i = 0; i < list.size(); i++) {
                 bulkBuilder = bulkBuilder.addAction(
-//                        new Suggest.Builder("{\n" +
-//                                "  \"" + suggestionName + "\" : {\n" +
-//                                "    \"text\" : \"the amsterdma meetpu\",\n" +
-//                                "    \"term\" : {\n" +
-//                                "      \"field\" : \"body\"\n" +
-//                                "    }\n" +
-//                                "  }\n" +
-//                                "}").build()
-
-
                         new Index.Builder(
                                 "{\"firstname\":\"" + list.get(i).substring(1, list.get(i).length() - 1) + "\"}"
                         ).build()

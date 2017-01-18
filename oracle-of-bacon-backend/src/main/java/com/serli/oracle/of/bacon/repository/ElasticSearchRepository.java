@@ -41,12 +41,12 @@ public class ElasticSearchRepository {
                 "    }\n" +
                 "}";
         Search search = new Search.Builder(json).addIndex("actors").build();
-        SearchResult sr = jestClient.execute(search);
-        List<String> rs = sr.getSourceAsStringList();
-        for (int i = 0; i < rs.size(); i++) {
-            rs.set(i, rs.get(i).substring(14, rs.get(i).length() - 2));
+        SearchResult searchResult = jestClient.execute(search);
+        List<String> resultList = searchResult.getSourceAsStringList();
+        for (int i = 0; i < resultList.size(); i++) {
+            resultList.set(i, resultList.get(i).substring(14, resultList.get(i).length() - 2));
         }
-        return rs;
+        return resultList;
     }
 
 }
