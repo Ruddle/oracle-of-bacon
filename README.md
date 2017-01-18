@@ -1,5 +1,11 @@
 # Orcacle of Bacon
 
+## Rendu final
+
+Fait par Thomas SIMON et Vannasay SOUVANNAVONG.
+Les 4 bases de données sont utilisées et fonctionnent.
+mongodb et uniquement testable avec une requête get sur actor?name=actorName
+
 ## Présentation
 
 L'objectif de l'application est de déterminer le degré de séparation entre Kevin Bacon et un acteur donné via ses rôles dans les films.
