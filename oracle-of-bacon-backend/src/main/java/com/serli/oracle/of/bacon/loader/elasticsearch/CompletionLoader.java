@@ -5,6 +5,7 @@ import io.searchbox.client.JestClient;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.Delete;
 import io.searchbox.core.Index;
+import io.searchbox.core.Suggest;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.mapping.PutMapping;
 
@@ -33,7 +34,7 @@ public class CompletionLoader {
         PutMapping putMapping = new PutMapping.Builder(
                 "actors",
                 "csv",
-                "{ \"csv\" : { \"properties\" : { \"firstname\" : {\"type\" : \"string\", \"store\" : \"yes\"} } } }"
+                "{ \"csv\" : { \"properties\" : { \"firstname\" : {\"type\" : \"completion\", \"store\" : \"yes\"} } } }"
         ).build();
         client.execute(putMapping);
 
@@ -43,7 +44,21 @@ public class CompletionLoader {
             Bulk.Builder bulkBuilder = new Bulk.Builder();
             System.out.println("Sending by bulk");
             for (int i = 0; i < list.size(); i++) {
-                bulkBuilder = bulkBuilder.addAction(new Index.Builder("{\"firstname\":\"" + list.get(i).substring(1, list.get(i).length() - 1) + "\"}").build());
+                bulkBuilder = bulkBuilder.addAction(
+//                        new Suggest.Builder("{\n" +
+//                                "  \"" + suggestionName + "\" : {\n" +
+//                                "    \"text\" : \"the amsterdma meetpu\",\n" +
+//                                "    \"term\" : {\n" +
+//                                "      \"field\" : \"body\"\n" +
+//                                "    }\n" +
+//                                "  }\n" +
+//                                "}").build()
+
+
+                        new Index.Builder(
+                                "{\"firstname\":\"" + list.get(i).substring(1, list.get(i).length() - 1) + "\"}"
+                        ).build()
+                );
                 if (i % bulksize == bulksize - 1) {
                     client.execute(bulkBuilder.build());
                     bulkBuilder = new Bulk.Builder()
